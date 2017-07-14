@@ -5,3 +5,21 @@
 .app {
     height: 100vh;
 }
+
+.search-box {
+    #search-box-input {
+        height: 96px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+        padding-left: 21px;
+        font-size: 36px;
+    }
+
+    span.ant-input-suffix {
+        right: 14px;
+
+        i {
+            font-size: 74px;
+        }
+    }
+}

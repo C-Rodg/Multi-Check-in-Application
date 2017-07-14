@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input } from 'antd'
+import { Input, Row, Col } from 'antd'
 const Search = Input.Search;
 
 class SearchBox extends Component {
@@ -13,14 +13,39 @@ class SearchBox extends Component {
         console.log(this.state);
     }
 
+    onSearchSubmit(val) {
+        console.log(val);
+    }
+
     render() {
         return (
-            <div className="search-box">
-                <Search 
-                    placeholder="Email Address or Last Name.."
-                />
+            <div className="search-box" style={searchBoxStyles.wrapper} >
+                <Row type="flex" justify="space-around" align="middle" style={searchBoxStyles.row}>
+                    <Col span={12} >
+                        <Search 
+                            id="search-box-input"
+                            style={searchBoxStyles.input}
+                            placeholder="Email Address or Last Name.."
+                            size="large"
+                            onSearch={this.onSearchSubmit}
+                        />
+                    </Col>
+                </Row>
             </div>
         );
+    }
+}
+
+const searchBoxStyles = {
+    wrapper: {
+        flexGrow: '1',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        textAlign: 'center'        
+    },
+    row: {
+        marginTop: '-120px'
     }
 }
 
