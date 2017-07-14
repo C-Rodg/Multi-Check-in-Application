@@ -13,7 +13,8 @@ StatusText.defaultProps = {
 const statusTextStyles = {
     textAlign: 'center',
     fontSize: '3.3rem',
-    padding: '0.5rem'
+    paddingTop: '0.8rem',
+    paddingBottom: '0.6rem'
 };
 
 export default StatusText;

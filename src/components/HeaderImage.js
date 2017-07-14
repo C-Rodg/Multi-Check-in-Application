@@ -10,7 +10,7 @@ const HeaderImage = () => {
 
 const headerStyle = {
     textAlign: 'center',
-    paddingTop: '25px'
+    paddingTop: '35px'
 };
 
 export default HeaderImage;
