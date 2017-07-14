@@ -1,0 +1,12 @@
+# Node Modules
+node_modules/
+
+# Output
+dist/
+
+# Yarn
+yarn.lock
+
+# Images
+src/static/bg-nyc.jpg
+src/static/bg-sf.jpg
