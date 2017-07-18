@@ -2,20 +2,20 @@ export const eventList = [
     {
         name: 'AWS DevOps Best Practices Day',
         campaign: '1293849a5sdkf',
-        startDate: '2017-07-13',
-        endDate: '2017-07-15'
+        startDate: '2017-07-17',
+        endDate: '2017-07-19'
     },    
     {
         name: 'VC 201 | The Investment Memo',
         campaign: '12938249asdkf',
-        startDate: '2017-07-14',
-        endDate: '2017-07-14'
+        startDate: '2017-07-18',
+        endDate: '2017-07-18'
     },
     {
         name: 'Getting Started and Best Practices with AWS IoT Day',
         campaign: '2222zaksjdkfk',
-        startDate: '2017-07-16',
-        endDate: '2017-07-16'
+        startDate: '2017-07-19',
+        endDate: '2017-07-19'
     },
     {
         name: 'IoT Deep Dive Workshop Day',
@@ -45,6 +45,7 @@ export const eventList = [
         name: 'Co-Working',
         campaign: 'coworking',
         startDate: '2017-07-01',
-        endDate: '2017-07-30'
+        endDate: '2017-07-30',
+        coworking: true
     }
 ];

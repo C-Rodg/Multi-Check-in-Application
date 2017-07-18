@@ -10,3 +10,4 @@ yarn.lock
 # Images
 src/static/bg-nyc.jpg
 src/static/bg-sf.jpg
+src/mock/

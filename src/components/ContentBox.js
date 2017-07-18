@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 // Routes
+import HeaderImage from './HeaderImage'
 import StatusText from './StatusText';
 import EventListBox from './EventListBox';
 import SearchBox from './SearchBox';
@@ -14,39 +15,57 @@ const ContentBox = () => {
         return (
             <Switch>
                 <Route exact path="/settings" render={(props) => (
-                    <div className="content-box" style={contentBoxStyles}>
-                        <StatusText {...props} status="Settings" />                        
-                        <SettingsBox {...props} />
+                    <div style={contentStyles.routerRoot}>
+                        <HeaderImage showBack={true} />
+                        <div className="content-box" style={contentStyles.contentBox}>
+                            <StatusText {...props} status="Settings" />                        
+                            <SettingsBox {...props} />
+                        </div>
                     </div>
                 )} />
                 <Route exact path="/welcome" render={(props) => (
-                    <div className="content-box" style={contentBoxStyles}>
-                        <StatusText {...props} status="Why are you here today?" />
-                        <EventListBox {...props} />
+                    <div style={contentStyles.routerRoot}>
+                        <HeaderImage showBack={false}/>
+                        <div className="content-box" style={contentStyles.contentBox}>
+                            <StatusText {...props} status="Why are you here today?" />
+                            <EventListBox {...props} />
+                        </div>
                     </div>
                 )} />                    
                 <Route exact path="/search" render={(props) => (
-                    <div className="content-box" style={contentBoxStyles}>
-                        <StatusText {...props} status="Please enter your last name or email." />
-                        <SearchBox {...props} />
+                    <div style={contentStyles.routerRoot}>
+                        <HeaderImage showBack={true} />
+                        <div className="content-box" style={contentStyles.contentBox}>
+                            <StatusText {...props} status="Please enter your last name or email." />
+                            <SearchBox {...props} />
+                        </div>
                     </div>
                 )} />
                 <Route exact path="/walkin" render={(props) => (
-                    <div className="content-box" style={contentBoxStyles}>
-                        <StatusText {...props} status="Please enter your information." />
-                        <WalkInBox {...props} />
+                    <div style={contentStyles.routerRoot}>
+                        <HeaderImage showBack={true}/>
+                        <div className="content-box" style={contentStyles.contentBox}>
+                            <StatusText {...props} status="Please enter your information." />
+                            <WalkInBox {...props} />
+                        </div>
                     </div>
                 )} />
                 <Route exact path="/registrant" render={(props) => (
-                    <div className="content-box" style={contentBoxStyles}>
-                        <StatusText {...props} status="Please confirm your information." />
-                        <RegistrantBox {...props} />
+                    <div style={contentStyles.routerRoot}>
+                        <HeaderImage showBack={true}/>
+                        <div className="content-box" style={contentStyles.contentBox}>
+                            <StatusText {...props} status="Please confirm your information." />
+                            <RegistrantBox {...props} />
+                        </div>
                     </div>
                 )} /> 
                 <Route exact path="/thankyou" render={(props) => (
-                    <div className="content-box" style={contentBoxStyles}>
-                        <StatusText {...props} status="Thank you! You're all set!" />
-                        <ThankYouBox {...props} />
+                    <div style={contentStyles.routerRoot}>
+                        <HeaderImage showBack={false}/>
+                        <div className="content-box" style={contentStyles.contentBox}>
+                            <StatusText {...props} status="Thank you! You're all set!" />
+                            <ThankYouBox {...props} />
+                        </div>
                     </div>
                 )} /> 
                 <Redirect from="/" exact to="/welcome" />        
@@ -54,10 +73,17 @@ const ContentBox = () => {
         );
 };
 
-const contentBoxStyles = {
-    flexGrow: '1',
-    display: 'flex',
-    flexDirection: 'column'
+const contentStyles = {
+    contentBox: {
+        flexGrow: '1',
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    routerRoot: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh'
+    }
 };
 
 export default ContentBox;

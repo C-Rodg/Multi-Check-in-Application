@@ -19,9 +19,8 @@ const App = () => {
     console.log(todaysEvents);
     
     return (
-        <div className="app" style={appStyles} >
-            <HeaderImage />
-            <HashRouter>
+        <div className="app" style={appStyles} >            
+            <HashRouter>                
                 <ContentBox />
             </HashRouter>
         </div>
@@ -29,8 +28,7 @@ const App = () => {
 }
 
 const appStyles = {
-    display: 'flex',
-    flexDirection: 'column'
+    height: '100vh'
 };
 
 export default App;

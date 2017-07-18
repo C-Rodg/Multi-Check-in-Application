@@ -15,7 +15,7 @@ const EventItem = (props) => {
 
 const eventItemStyles = {
     column: {
-        backgroundColor: '#232f3e',
+        backgroundColor: '#2F3842',
         minHeight: '340px',
         borderRadius: '4px',
         cursor: 'pointer',
@@ -33,7 +33,7 @@ const eventItemStyles = {
         alignItems: 'center'
     },
     line: {
-        backgroundColor: '#febd69',
+        backgroundColor: '#ff9900',
         width: '85%',
         height: '5px',
         marginBottom: '22px',
