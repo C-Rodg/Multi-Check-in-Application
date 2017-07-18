@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import Loading from './Loading';
 import RegistrantTile from './RegistrantTile';
+import WalkInButton from './WalkInButton';
 
 const regs = [
     {
@@ -55,13 +56,29 @@ const regs = [
         FirstName: 'Mike',
         LastName: 'Doras',
         ScanKey: null
-    }
+    },
+    {
+        Attended: false,
+        AttendeeGuid: '123-123-7',
+        Company: 'MySpace',
+        FirstName: 'Tom',
+        LastName: 'Douglas',
+        ScanKey: null
+    },
+    // {
+    //     Attended: false,
+    //     AttendeeGuid: '123-123-8',
+    //     Company: 'Facebook',
+    //     FirstName: 'Timmy',
+    //     LastName: 'Groover',
+    //     ScanKey: null
+    // }
 ];
 
 class SearchBox extends Component {
     constructor(props) {
         super(props);
-        if (this.props.location && this.props.location.state) {
+        if (this.props.location && this.props.location.state) {            
             this.state = {
                 selectedEvent: { ...this.props.location.state.event },
                 loading: false,
@@ -123,12 +140,17 @@ class SearchBox extends Component {
 
     generateRegistrantTiles() {
         return (
-            <Row type="flex" justify="space-around" align="middle">
+            <Row type="flex" justify="center" align="middle" style={searchBoxStyles.listRow} gutter={16}>                
+                {this.state.registrants.map((reg) => {
+                    return (
+                        <Col span={6} key={reg.AttendeeGuid}>
+                            <RegistrantTile registrant={reg} event={this.state.selectedEvent} />
+                        </Col>
+                    );
+                })}  
                 <Col span={24}>
-                    {this.state.registrants.map((reg) => {
-                        return <RegistrantTile key={reg.AttendeeGuid} {...reg} />;
-                    })}
-                </Col>
+                    <WalkInButton event={this.state.selectedEvent} />
+                </Col>              
             </Row>
         );
     }
@@ -137,7 +159,7 @@ class SearchBox extends Component {
     render() {
         return (
             <div className="search-box" style={searchBoxStyles.wrapper} >
-                <Row type="flex" justify="space-around" align="middle" style={searchBoxStyles.row}>
+                <Row type="flex" justify="space-around" align="middle" style={searchBoxStyles.searchRow}>
                     <Col span={12} >
                         {
                             (this.state && this.state.loading) ?
@@ -173,8 +195,11 @@ const searchBoxStyles = {
         justifyContent: 'center',
         textAlign: 'center'        
     },
-    row: {
+    searchRow: {
         marginTop: '-120px'
+    },
+    listRow: {
+        marginTop: '25px'
     }
 }
 

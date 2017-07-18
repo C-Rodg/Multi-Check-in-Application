@@ -32,3 +32,24 @@
         font-size: 21px !important;
     }
 }
+
+a:focus {
+    text-decoration: none;
+}
+
+.ant-btn:hover, .ant-btn:focus {
+    color: #2F3842;
+    border-color: #2F3842;
+}
+
+.ant-input-affix-wrapper:hover .ant-input,
+.ant-input:hover,
+.ant-input:focus {
+    border-color: #2F3842;
+    box-shadow: none;
+}
+
+
+.ant-input-search-icon:hover {
+    color: #2F3842;
+}
