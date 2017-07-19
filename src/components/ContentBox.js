@@ -10,6 +10,7 @@ import WalkInBox from './WalkInBox';
 import RegistrantBox from './RegistrantBox';
 import ThankYouBox from './ThankYouBox';
 import SettingsBox from './SettingsBox';
+import SecretSettingsButton from './SecretSettingsButton';
 
 const ContentBox = () => {
         return (
@@ -25,6 +26,7 @@ const ContentBox = () => {
                 )} />
                 <Route exact path="/welcome" render={(props) => (
                     <div style={contentStyles.routerRoot}>
+                        <SecretSettingsButton />                        
                         <HeaderImage showBack={false}/>
                         <div className="content-box" style={contentStyles.contentBox}>
                             <StatusText {...props} status="Why are you here today?" />
