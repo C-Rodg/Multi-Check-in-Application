@@ -1,3 +1,7 @@
+html, body {
+    font-size: 16px;
+}
+
 #container {
     height: 100%;
 }
@@ -33,6 +37,9 @@
     }
 }
 
+// ANTD Overrides
+
+
 a:focus {
     text-decoration: none;
 }
@@ -40,6 +47,21 @@ a:focus {
 .ant-btn:hover, .ant-btn:focus {
     color: #2F3842;
     border-color: #2F3842;
+}
+
+.ant-btn-primary.register-btn {
+    padding: 0 28px;
+    font-size: 28px;
+    height: 64px;
+    color: #fff;
+    background-color: #FFB039;
+    border-color: #FFB039;
+}
+
+.ant-btn-primary.register-btn:hover, .ant-btn-primary.register-btn:focus {
+    background-color: #ff9900;
+    border-color: #ff9900;
+    color: #fff;
 }
 
 .ant-input-affix-wrapper:hover .ant-input,
@@ -58,4 +80,15 @@ a:focus {
 .ant-switch-checked {
     border-color: #ff9900;
     background-color: #ff9900;
+}
+
+.ant-card-head-title {
+    font-size: 18px;
+}
+
+.ant-card,
+.ant-select-dropdown,
+.ant-select-arrow,
+.ant-select {
+    font-size: 16px;
 }

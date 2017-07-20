@@ -5,17 +5,12 @@ import SettingsCard from './SettingsCard';
 
 class SettingsBox extends Component {
     constructor(props) {
-        super(props);
-    }
-
-    componentWillMount() {
-
+        super(props);       
     }
 
     renderCards() {
         if (window.todaysEvents) {
-            return window.todaysEvents.map((event) => {
-                console.log(event);
+            return window.todaysEvents.map((event) => {                  
                 return <SettingsCard key={event.campaign} { ...event } />;
             });
         }

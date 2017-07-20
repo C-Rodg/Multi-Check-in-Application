@@ -11,3 +11,4 @@ yarn.lock
 src/static/bg-nyc.jpg
 src/static/bg-sf.jpg
 src/mock/
+src/config/amazonDef.txt

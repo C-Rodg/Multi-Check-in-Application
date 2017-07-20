@@ -23,7 +23,9 @@ const eventItemStyles = {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)'
+        boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
+        marginRight: '10px',
+        marginBottom: '10px'
     },
     link: {
         color: '#fff',

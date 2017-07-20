@@ -22,7 +22,8 @@ const eventListStyles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
+    padding: '10px'
 };
 
 export default EventListBox;

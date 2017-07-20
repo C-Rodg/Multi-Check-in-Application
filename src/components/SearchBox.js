@@ -116,9 +116,15 @@ class SearchBox extends Component {
             console.log(data);
             if (data && data.d && !data.d.Fault) {
                 if (data.d.Registrants && data.d.Registrants.length === 1) {
-                    // TODO: Navigate to 'registrant' route with Registrant..
-                } else if (data.d.Registrants && data.d.Registrants.length === 0) {
-                    // TODO: Navigate to 'walkin' route with empty registrant...
+                    this.props.history.push({
+                        pathname: '/registrant',
+                        state: { event: this.state.selectedEvent, registrant: data.d.Registrants[0] }
+                    });
+                } else if (data.d.Registrants && data.d.Registrants.length === 0) {                    
+                    this.props.history.push({
+                        pathname: '/walkin',
+                        state: { event: this.state.selectedEvent }
+                    });
                 } else {
                     // Display list of registrants
                     this.setState({ loading: false, registrants: data.d.Registrants });
@@ -133,8 +139,12 @@ class SearchBox extends Component {
             this.setState({ loading: false });
 
             // TESTING
-            //this.props.history.push('/walkin');
-            this.setState({ registrants: regs });
+            //this.props.history.push('/walkin', { event: this.state.selectedEvent });
+            this.props.history.push({
+                pathname: '/walkin',
+                state: { event: this.state.selectedEvent }
+            });
+            //this.setState({ registrants: regs });
         });
     }
 
