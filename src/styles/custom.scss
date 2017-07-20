@@ -28,6 +28,16 @@ html, body {
     }
 }
 
+.req::after {
+    content: '*';
+    color: #e74c3c;
+}
+
+// ------------- ANTD Overrides ---------------------- //
+
+a:focus {
+    text-decoration: none;
+}
 
 .ant-message {
     font-size: 24px !important;
@@ -35,13 +45,6 @@ html, body {
     .anticon {
         font-size: 21px !important;
     }
-}
-
-// ANTD Overrides
-
-
-a:focus {
-    text-decoration: none;
 }
 
 .ant-btn:hover, .ant-btn:focus {

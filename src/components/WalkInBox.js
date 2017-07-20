@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { message, Card, Row, Col, Input, Select, Button, Icon } from 'antd';
 const Option = Select.Option;
+import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 import { company_size, company_type, job_role, industry, levels,
     countryList, states_us, states_australia, states_brazil, states_canada, states_china, states_germany, states_hongkong, states_india } from '../config/dropdowns';
-import { generateFreshForm } from '../config/registrant';
+import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName } from '../config/registrant';
 
 class WalkInBox extends Component {
     constructor(props) {
@@ -94,10 +96,35 @@ class WalkInBox extends Component {
     onFormSubmit(ev) {
         ev.preventDefault();
 
-        // TODO: CHECK FOR REQUIRED FIELDS VALID, display prompt if not complete
+        // Ensure all fields have been filled out
+        let errorMsg = "";
+        const { form } = this.state;
+        for (let i = 0, j = requiredFields.length; i < j; i++) {
+            const { tag } = requiredFields[i];
+            if (!form[tag]) {
+                if(tag === 'qrState' && this.state.showStateOther) {
+                    // do nothing...
+                } else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg && this.state.event.campaign)) {
+                    // do nothing
+                } else if (tag === 'qrAccountID' && (!this.state.event.campagin)) {
+                    // do nothing
+                } else {
+                    errorMsg = `${requiredFields[i].name} is a required field.`;
+                    break;
+                }
+            }
+        }
+        if(errorMsg) {
+            message.error(errorMsg, 3);
+            return false;
+        }        
 
-        // TODO: SUBMIT TO VALIDAR SERVICE, navigate to thank you route
+        // Generate registrant, mark as walk in and assign station name
+        const registrant = assignStationName(markAsWalkIn(generateRegistrant()));
+        registrant.SurveyData = convertFormToSurveyData(form);
         
+        console.log(registrant);
+        // TODO: SUBMIT TO VALIDAR SERVICE, navigate to thank you route
     }
 
     // Render the walk-in box
@@ -106,167 +133,167 @@ class WalkInBox extends Component {
         return (
             <div className="walkin-box" style={walkInBoxStyles.container} >
                 <form onSubmit={this.onFormSubmit}>
-                <Row>
-                    <Col span={14} offset={5}>
-                        <Card title="New Registration" noHovering="true">
-                            <Row>
+                    <Row>
+                        <Col span={14} offset={5}>
+                            <Card title="New Registration" noHovering="true">
+                                <Row>
 
-                                <Col span={11}>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>First Name:</Col>
-                                        <Col span={14}>
-                                            <Input size="large" value={form.qrFirstName} onChange={(ev) => this.onInputChange(ev, 'qrFirstName')}/>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Last Name:</Col>
-                                        <Col span={14}>
-                                            <Input size="large" value={form.qrLastName} onChange={(ev) => this.onInputChange(ev, 'qrLastName')}/>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Phone:</Col>
-                                        <Col span={14}>
-                                            <Input size="large" value={form.qrPhone} onChange={(ev) => this.onInputChange(ev, 'qrPhone')}/>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Email:</Col>
-                                        <Col span={14}>
-                                            <Input size="large" value={form.qrEmail} onChange={(ev) => this.onInputChange(ev, 'qrEmail')}/>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Company:</Col>
-                                        <Col span={14}>
-                                            <Input size="large" value={form.qrCompany} onChange={(ev) => this.onInputChange(ev, 'qrCompany')}/>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Company Size:</Col>
-                                        <Col span={14}>
-                                            <Select style={{width: '100%'}} size="large" value={form.qrCompanySize} onChange={(ev) => this.onInputChange(ev, 'qrCompanySize')}>
-                                                {this.generateDropdown(company_size)}
-                                            </Select>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Company Type:</Col>
-                                        <Col span={14}>
-                                            <Select style={{width: '100%'}} size="large" value={form.qrCompanyType} onChange={(ev) => this.onInputChange(ev, 'qrCompanyType')}>
-                                                {this.generateDropdown(company_type)}
-                                            </Select>
-                                        </Col>
-                                    </Row>
-                                    {
-                                        (this.state.event.coworking) ?
+                                    <Col span={11}>
                                         <Row style={walkInBoxStyles.row}>
-                                            <Col span={10} style={walkInBoxStyles.label}>AWS Account ID:</Col>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">First Name:</Col>
                                             <Col span={14}>
-                                                <Input size="large" value={form.qrAccountID} onChange={(ev) => this.onInputChange(ev, 'qrAccountID')}/>
+                                                <Input size="large" value={form.qrFirstName} onChange={(ev) => this.onInputChange(ev, 'qrFirstName')}/>
                                             </Col>
-                                        </Row> 
-                                        :
-                                        ""
-                                    }
-                                    {
-                                        (!this.state.event.coworking && this.state.settings.prereg ) ?
+                                        </Row>
                                         <Row style={walkInBoxStyles.row}>
-                                            <Col span={10} style={walkInBoxStyles.optInLabel}>Allow Sponsor communication?</Col>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Last Name:</Col>
                                             <Col span={14}>
-                                                <Select style={{width: '100%'}} size="large" value={form.qrPartnerQuestion} onChange={(ev) => this.onInputChange(ev, 'qrPartnerQuestion')}>
-                                                    <Option value="Yes">Yes</Option>
-                                                    <Option value="No">No</Option>                                         
+                                                <Input size="large" value={form.qrLastName} onChange={(ev) => this.onInputChange(ev, 'qrLastName')}/>
+                                            </Col>
+                                        </Row>
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Phone:</Col>
+                                            <Col span={14}>
+                                                <Input size="large" value={form.qrPhone} onChange={(ev) => this.onInputChange(ev, 'qrPhone')}/>
+                                            </Col>
+                                        </Row>
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Email:</Col>
+                                            <Col span={14}>
+                                                <Input size="large" value={form.qrEmail} onChange={(ev) => this.onInputChange(ev, 'qrEmail')}/>
+                                            </Col>
+                                        </Row>
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Company:</Col>
+                                            <Col span={14}>
+                                                <Input size="large" value={form.qrCompany} onChange={(ev) => this.onInputChange(ev, 'qrCompany')}/>
+                                            </Col>
+                                        </Row>
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Company Size:</Col>
+                                            <Col span={14}>
+                                                <Select style={{width: '100%'}} size="large" value={form.qrCompanySize} onChange={(ev) => this.onInputChange(ev, 'qrCompanySize')}>
+                                                    {this.generateDropdown(company_size)}
                                                 </Select>
                                             </Col>
                                         </Row>
-                                        :
-                                        ""
-                                    }                                     
-                                    
-                                </Col>
-
-                                <Col span={11} offset={2}>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Job Title:</Col>
-                                        <Col span={14}>
-                                            <Input size="large" value={form.qrTitle} onChange={(ev) => this.onInputChange(ev, 'qrTitle')}/>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Job Role:</Col>
-                                        <Col span={14}>
-                                            <Select style={{width: '100%'}} size="large" value={form.qrJobRole} onChange={(ev) => this.onInputChange(ev, 'qrJobRole')}>
-                                                {this.generateDropdown(job_role)}
-                                            </Select>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Industry:</Col>
-                                        <Col span={14}>
-                                            <Select style={{width: '100%'}} size="large" value={form.qrIndustry} onChange={(ev) => this.onInputChange(ev, 'qrIndustry')}>
-                                                {this.generateDropdown(industry)}
-                                            </Select>
-                                        </Col>
-                                    </Row>
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Country:</Col>
-                                        <Col span={14}>
-                                            <Select style={{width: '100%'}} size="large" onChange={this.selectCountry} value={form.qrCountry} >
-                                                {this.generateDropdown(countryList)}                                           
-                                            </Select>
-                                        </Col>
-                                    </Row>
-                                    {
-                                        !this.state.showStateOther ? 
-
                                         <Row style={walkInBoxStyles.row}>
-                                            <Col span={10} style={walkInBoxStyles.label}>State:</Col>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Company Type:</Col>
                                             <Col span={14}>
-                                                <Select style={{width: '100%'}} size="large" value={form.qrState} onChange={(ev) => this.onInputChange(ev, 'qrState')}>
-                                                    {this.generateStateDropdown()}                                           
+                                                <Select style={{width: '100%'}} size="large" value={form.qrCompanyType} onChange={(ev) => this.onInputChange(ev, 'qrCompanyType')}>
+                                                    {this.generateDropdown(company_type)}
                                                 </Select>
                                             </Col>
                                         </Row>
+                                        {
+                                            (this.state.event.coworking) ?
+                                            <Row style={walkInBoxStyles.row}>
+                                                <Col span={10} style={walkInBoxStyles.label} className="req">AWS Account ID:</Col>
+                                                <Col span={14}>
+                                                    <Input size="large" value={form.qrAccountID} onChange={(ev) => this.onInputChange(ev, 'qrAccountID')}/>
+                                                </Col>
+                                            </Row> 
+                                            :
+                                            ""
+                                        }
+                                        {
+                                            (!this.state.event.coworking && this.state.settings.prereg ) ?
+                                            <Row style={walkInBoxStyles.row}>
+                                                <Col span={10} style={walkInBoxStyles.optInLabel} className="req">Allow Sponsor communication?</Col>
+                                                <Col span={14}>
+                                                    <Select style={{width: '100%'}} size="large" value={form.qrPartnerQuestion} onChange={(ev) => this.onInputChange(ev, 'qrPartnerQuestion')}>
+                                                        <Option value="Yes">Yes</Option>
+                                                        <Option value="No">No</Option>                                         
+                                                    </Select>
+                                                </Col>
+                                            </Row>
+                                            :
+                                            ""
+                                        }                                     
                                         
-                                        :
+                                    </Col>
 
+                                    <Col span={11} offset={2}>
                                         <Row style={walkInBoxStyles.row}>
-                                            <Col span={10} style={walkInBoxStyles.label}>State Other:</Col>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Job Title:</Col>
                                             <Col span={14}>
-                                                <Input size="large" value={form.qrStateOther} onChange={(ev) => this.onInputChange(ev, 'qrStateOther')}/>
+                                                <Input size="large" value={form.qrTitle} onChange={(ev) => this.onInputChange(ev, 'qrTitle')}/>
                                             </Col>
                                         </Row>
-                                    }      
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.label}>Zip Code:</Col>
-                                        <Col span={14}>
-                                            <Input size="large" value={form.qrZip} onChange={(ev) => this.onInputChange(ev, 'qrZip')}/>
-                                        </Col>
-                                    </Row>  
-                                    <Row style={walkInBoxStyles.row}>
-                                        <Col span={10} style={walkInBoxStyles.longLabel}>Level of AWS Usage:</Col>
-                                        <Col span={14}>
-                                            <Select style={{width: '100%'}} size="large" value={form.qrLevel} onChange={(ev) => this.onInputChange(ev, 'qrLevel')}>
-                                                {this.generateDropdown(levels)}                                           
-                                            </Select>
-                                        </Col>
-                                    </Row>                                                                                                    
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Job Role:</Col>
+                                            <Col span={14}>
+                                                <Select style={{width: '100%'}} size="large" value={form.qrJobRole} onChange={(ev) => this.onInputChange(ev, 'qrJobRole')}>
+                                                    {this.generateDropdown(job_role)}
+                                                </Select>
+                                            </Col>
+                                        </Row>
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Industry:</Col>
+                                            <Col span={14}>
+                                                <Select style={{width: '100%'}} size="large" value={form.qrIndustry} onChange={(ev) => this.onInputChange(ev, 'qrIndustry')}>
+                                                    {this.generateDropdown(industry)}
+                                                </Select>
+                                            </Col>
+                                        </Row>
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Country:</Col>
+                                            <Col span={14}>
+                                                <Select style={{width: '100%'}} size="large" onChange={this.selectCountry} value={form.qrCountry} >
+                                                    {this.generateDropdown(countryList)}                                           
+                                                </Select>
+                                            </Col>
+                                        </Row>
+                                        {
+                                            !this.state.showStateOther ? 
 
-                                </Col>
+                                            <Row style={walkInBoxStyles.row}>
+                                                <Col span={10} style={walkInBoxStyles.label} className="req">State:</Col>
+                                                <Col span={14}>
+                                                    <Select style={{width: '100%'}} size="large" value={form.qrState} onChange={(ev) => this.onInputChange(ev, 'qrState')}>
+                                                        {this.generateStateDropdown()}                                           
+                                                    </Select>
+                                                </Col>
+                                            </Row>
+                                            
+                                            :
 
-                            </Row>
+                                            <Row style={walkInBoxStyles.row}>
+                                                <Col span={10} style={walkInBoxStyles.label}>State Other:</Col>
+                                                <Col span={14}>
+                                                    <Input size="large" value={form.qrStateOther} onChange={(ev) => this.onInputChange(ev, 'qrStateOther')}/>
+                                                </Col>
+                                            </Row>
+                                        }      
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.label} className="req">Zip Code:</Col>
+                                            <Col span={14}>
+                                                <Input size="large" value={form.qrZip} onChange={(ev) => this.onInputChange(ev, 'qrZip')}/>
+                                            </Col>
+                                        </Row>  
+                                        <Row style={walkInBoxStyles.row}>
+                                            <Col span={10} style={walkInBoxStyles.longLabel} className="req">Level of AWS Usage:</Col>
+                                            <Col span={14}>
+                                                <Select style={{width: '100%'}} size="large" value={form.qrLevel} onChange={(ev) => this.onInputChange(ev, 'qrLevel')}>
+                                                    {this.generateDropdown(levels)}                                           
+                                                </Select>
+                                            </Col>
+                                        </Row>                                                                                                    
 
-                            <Row style={{marginTop: '15px'}}>                            
-                                <Col span={24} style={{ textAlign: 'right' }}>
-                                    <Button onClick={this.onFormSubmit} htmlType="submit" size="large" type="primary" className="register-btn">
-                                        Register<Icon type="right" />
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
-                </Row>
+                                    </Col>
+
+                                </Row>
+
+                                <Row style={{marginTop: '15px'}}>                            
+                                    <Col span={24} style={{ textAlign: 'right' }}>
+                                        <Button onClick={this.onFormSubmit} htmlType="submit" size="large" type="primary" className="register-btn">
+                                            Register<Icon type="right" />
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                    </Row>
                 </form>
             </div>
         );
@@ -302,4 +329,4 @@ const walkInBoxStyles = {
     }
 };
 
-export default WalkInBox;
+export default withRouter(WalkInBox);
