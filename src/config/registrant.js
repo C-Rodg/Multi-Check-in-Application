@@ -16,7 +16,8 @@ export const generateFreshForm = () => {
         qrStateOther: '',
         qrZip: '',
         qrLevel: '',
-        qrPartnerQuestion: ''
+        qrPartnerQuestion: '',
+        qrEventName: ''
     };
 };
 
@@ -78,6 +79,16 @@ export const markAsWalkIn = (reg) => {
 export const assignStationName = (reg) => {
     const StationName = window.localStorage.getItem('validar_stationName') || '-NO STATION NAME-'
     return Object.assign({}, reg, { StationName })
+};
+
+// Assign Company, Email, FirstName, LastName, Attendee Type??
+export const assignRegistrantProps = (reg, form) => {
+    return Object.assign({}, reg, {
+        Company: form.qrCompany || '',
+        Email: form.qrEmail || '',
+        FirstName: form.qrFirstName || '',
+        LastName: form.qrLastName || ''
+    });
 };
 
 // Convert Form Object to survey data / new survey data

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { company_size, company_type, job_role, industry, levels,
     countryList, states_us, states_australia, states_brazil, states_canada, states_china, states_germany, states_hongkong, states_india } from '../config/dropdowns';
-import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName } from '../config/registrant';
+import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName, assignRegistrantProps } from '../config/registrant';
 
 class WalkInBox extends Component {
     constructor(props) {
@@ -14,8 +14,10 @@ class WalkInBox extends Component {
 
         if (props.location && props.location.state && props.location.state.event) {
             const settingsStr = window.localStorage.getItem(props.location.state.event.campaign);
+            const newForm = generateFreshForm();
+            newForm.qrEventName = props.location.state.event.name;
             this.state = {
-                form: generateFreshForm(),
+                form: newForm,
                 stateList: states_us,
                 showStateOther: false,
                 event: props.location.state.event,
@@ -98,13 +100,13 @@ class WalkInBox extends Component {
 
         // Ensure all fields have been filled out
         let errorMsg = "";
-        const { form } = this.state;
+        const { form, event } = this.state;
         for (let i = 0, j = requiredFields.length; i < j; i++) {
             const { tag } = requiredFields[i];
             if (!form[tag]) {
                 if(tag === 'qrState' && this.state.showStateOther) {
                     // do nothing...
-                } else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg && this.state.event.campaign)) {
+                } else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg || this.state.event.coworking)) {
                     // do nothing
                 } else if (tag === 'qrAccountID' && (!this.state.event.campagin)) {
                     // do nothing
@@ -119,12 +121,13 @@ class WalkInBox extends Component {
             return false;
         }        
 
-        // Generate registrant, mark as walk in and assign station name
-        const registrant = assignStationName(markAsWalkIn(generateRegistrant()));
+        // Generate registrant, mark as walk in, assign station name, assign basic props
+        const registrant = assignRegistrantProps(assignStationName(markAsWalkIn(generateRegistrant())), form);
         registrant.SurveyData = convertFormToSurveyData(form);
+        registrant.AttendeeType = event.name;
         
         console.log(registrant);
-        // TODO: SUBMIT TO VALIDAR SERVICE, navigate to thank you route
+        // TODO: Checkin registrant and print  -- preview upsert/printbadge, upsert/print badge
     }
 
     // Render the walk-in box
@@ -278,7 +281,7 @@ class WalkInBox extends Component {
                                                     {this.generateDropdown(levels)}                                           
                                                 </Select>
                                             </Col>
-                                        </Row>                                                                                                    
+                                        </Row>  
 
                                     </Col>
 
