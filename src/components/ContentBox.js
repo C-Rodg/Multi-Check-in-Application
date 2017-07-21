@@ -70,7 +70,7 @@ const ContentBox = () => {
                         </div>
                     </div>
                 )} /> 
-                <Redirect from="/" exact to="/welcome" />        
+                <Redirect from="/" exact to="/settings" />        
             </Switch>            
         );
 };
