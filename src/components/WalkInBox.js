@@ -145,6 +145,7 @@ class WalkInBox extends Component {
             }
         };
 
+        // Save registrant
         axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config).then((resp) => {
             const { Registrant } =  resp.data.d;
             const currentPrinter = window.localStorage.getItem('validar_selectedPrinter');
@@ -164,8 +165,7 @@ class WalkInBox extends Component {
             }
 
             this.props.history.push({
-                pathname: '/thankyou',
-                state: { success }
+                pathname: '/thankyou'
             });
         })        
         .catch((err) => {

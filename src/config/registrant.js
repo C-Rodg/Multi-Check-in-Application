@@ -21,6 +21,24 @@ export const generateFreshForm = () => {
     };
 };
 
+export const loadRegistrantIntoForm = (existingReg) => {
+    const newForm = generateFreshForm();
+
+    const parser = new DOMParser();
+    const formDoc = parser.parseFromString(existingReg.SurveyData, 'text/xml');
+    const rootNode = formDoc.firstChild;
+    const responsesElement = rootNode.firstChild;
+
+    for(let prop in newForm) {
+        if (newForm.hasOwnProperty(prop)) {
+            newForm[prop] = getTextFromXml(responsesElement, prop);
+        }
+    }
+
+    console.log(newForm);
+    return newForm;
+};
+
 export const requiredFields = [
     { tag: 'qrFirstName', name: 'First Name' },
     { tag: 'qrLastName', name: 'Last Name' },

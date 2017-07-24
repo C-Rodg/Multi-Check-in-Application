@@ -109,7 +109,7 @@ class SearchBox extends Component {
                     Comparison: "Contains",//"Equals",
                     Value: val
                 }]
-                // TODO: SEARCH FOR NON-NULL Scan KEYS
+                // TODO: SEARCH FOR NON-NULL Scan KEYS  AND SEE IF WALK-INS ARE ALLOWED and see if EventName === selected event name
             }
         };
         axios.post('Services/Methods.asmx/SearchRegistrants', inputArgs).then((resp) => {
