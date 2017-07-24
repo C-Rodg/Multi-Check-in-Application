@@ -112,22 +112,23 @@ class SearchBox extends Component {
                 // TODO: SEARCH FOR NON-NULL Scan KEYS
             }
         };
-        axios.post('Services/Methods.asmx/SearchRegistrants', inputArgs).then((data) => {
-            console.log(data);
-            if (data && data.d && !data.d.Fault) {
-                if (data.d.Registrants && data.d.Registrants.length === 1) {
+        axios.post('Services/Methods.asmx/SearchRegistrants', inputArgs).then((resp) => {
+            console.log(resp);
+            const { d } = resp.data;
+            if (d && !d.Fault) {
+                if (d.Registrants && d.Registrants.length === 1) {
                     this.props.history.push({
                         pathname: '/registrant',
-                        state: { event: this.state.selectedEvent, registrant: data.d.Registrants[0] }
+                        state: { event: this.state.selectedEvent, registrant: d.Registrants[0] }
                     });
-                } else if (data.d.Registrants && data.d.Registrants.length === 0) {                    
+                } else if (d.Registrants && d.Registrants.length === 0) {                    
                     this.props.history.push({
                         pathname: '/walkin',
-                        state: { event: this.state.selectedEvent }
+                        state: { event: this.state.selectedEvent, searchTerm: val }
                     });
                 } else {
                     // Display list of registrants
-                    this.setState({ loading: false, registrants: data.d.Registrants });
+                    this.setState({ loading: false, registrants: d.Registrants });
                 }                
             } else {
                 message.error('There seems to be an issue searching...', 3);
@@ -158,7 +159,7 @@ class SearchBox extends Component {
                         </Col>
                     );
                 })}  
-                <Col span={24}>
+                <Col span={24} style={searchBoxStyles.endRow} >
                     <WalkInButton event={this.state.selectedEvent} />
                 </Col>              
             </Row>
@@ -203,13 +204,16 @@ const searchBoxStyles = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        textAlign: 'center'        
+        textAlign: 'center'      
     },
     searchRow: {
         marginTop: '-120px'
     },
     listRow: {
         marginTop: '25px'
+    },
+    endRow: {
+        paddingBottom: '15px'
     }
 }
 

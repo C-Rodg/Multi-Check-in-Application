@@ -25,8 +25,8 @@ class SettingsBox extends Component {
     // Get printer list
     componentWillMount() {
         axios.post('Services/Methods.asmx/ListPrinters', {})
-            .then((data) => {
-                const printers = data.d.Printers;
+            .then((resp) => {
+                const printers = resp.data.d.Printers;
                 this.setState({ printerList: printers });
             })
             .catch((err) => {
@@ -58,6 +58,7 @@ class SettingsBox extends Component {
         this.setState({ selectedPrinter: val });
     }
 
+    // Get dropdown of printers
     generatePrinterDropdown() {
         return this.state.printerList.map((printer) => {
             return <Option key={printer} value={printer}>{printer}</Option>;
@@ -70,7 +71,7 @@ class SettingsBox extends Component {
                 <Row gutter={16} justify="center" type="flex">
                     <Col span={6} style={settingsStyles.station}>
                         <Card title="Station Settings" noHovering="false" >
-                            <Row>
+                            <Row style={settingsStyles.row} >
                                 <Col span={10}>
                                     Station Name: 
                                 </Col> 
@@ -83,7 +84,7 @@ class SettingsBox extends Component {
                                     Printer:
                                 </Col>
                                 <Col span={14}>
-                                    <Select style={{width: '100%'}} size="large" value={this.selectedPrinter} onChange={this.updateSelectedPrinter}>
+                                    <Select style={{width: '100%'}} size="large" value={this.state.selectedPrinter} onChange={this.updateSelectedPrinter}>
                                         <Option value=""></Option>
                                         {
                                            this.generatePrinterDropdown()
@@ -109,6 +110,9 @@ const settingsStyles = {
     station: {
         marginBottom: '15px',
         paddingLeft: '0'
+    },
+    row: {
+        marginBottom: '15px'
     }
 };
 

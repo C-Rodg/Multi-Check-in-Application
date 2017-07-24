@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { company_size, company_type, job_role, industry, levels,
     countryList, states_us, states_australia, states_brazil, states_canada, states_china, states_germany, states_hongkong, states_india } from '../config/dropdowns';
-import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName, assignRegistrantProps } from '../config/registrant';
+import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName, assignRegistrantProps, assignAsAttended } from '../config/registrant';
 
 class WalkInBox extends Component {
     constructor(props) {
@@ -16,6 +16,14 @@ class WalkInBox extends Component {
             const settingsStr = window.localStorage.getItem(props.location.state.event.campaign);
             const newForm = generateFreshForm();
             newForm.qrEventName = props.location.state.event.name;
+            const { searchTerm } = props.location.state;
+            if (searchTerm) {
+                if (searchTerm.indexOf('@') > -1) {
+                    newForm.qrEmail = searchTerm;
+                } else {
+                    newForm.qrLastName = searchTerm;
+                }
+            }
             this.state = {
                 form: newForm,
                 stateList: states_us,
@@ -122,12 +130,26 @@ class WalkInBox extends Component {
         }        
 
         // Generate registrant, mark as walk in, assign station name, assign basic props
-        const registrant = assignRegistrantProps(assignStationName(markAsWalkIn(generateRegistrant())), form);
+        const registrant = assignAsAttended(assignRegistrantProps(assignStationName(markAsWalkIn(generateRegistrant())), form));
         registrant.SurveyData = convertFormToSurveyData(form);
         registrant.AttendeeType = event.name;
         
         console.log(registrant);
-        // TODO: Checkin registrant and print  -- preview upsert/printbadge, upsert/print badge
+        const data = {
+            registrant
+        };
+        
+        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data)).then((resp) => {
+            console.log(resp);
+            // Create print doc and mark as printed
+
+            // Navigate to thank you
+
+        }).catch((err) => {
+            console.log("ERROR");
+            console.log(err);
+            message.error('There seems to be an issue saving this record. Please see the help desk.', 3);
+        });
     }
 
     // Render the walk-in box

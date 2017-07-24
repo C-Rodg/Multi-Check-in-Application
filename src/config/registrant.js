@@ -91,6 +91,16 @@ export const assignRegistrantProps = (reg, form) => {
     });
 };
 
+// 
+export const assignAsAttended = (reg) => {
+    const FirstCheckInDateTime = reg.FirstCheckInDateTime ? reg.FirstCheckInDateTime : new Date();
+    return Object.assign({}, reg, {
+        Attended: true,
+        OnSiteModifiedDateTime: new Date(),
+        FirstCheckInDateTime
+    });
+}
+
 // Convert Form Object to survey data / new survey data
 export const convertFormToSurveyData = (form, survey) => {
     let surveyData = survey ? survey : '<result><responses></responses></result>';
