@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { company_size, company_type, job_role, industry, levels,
     countryList, states_us, states_australia, states_brazil, states_canada, states_china, states_germany, states_hongkong, states_india } from '../config/dropdowns';
-import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName, assignRegistrantProps, assignAsAttended } from '../config/registrant';
+import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName, assignRegistrantProps, assignAsAttended, generatePrintArgs } from '../config/registrant';
 
 class WalkInBox extends Component {
     constructor(props) {
@@ -138,14 +138,37 @@ class WalkInBox extends Component {
         const data = {
             registrant
         };
-        
-        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data)).then((resp) => {
-            console.log(resp);
+        const config = {
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json'
+            }
+        };
+
+        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config).then((resp) => {
+            const { Registrant } =  resp.data.d;
+            const currentPrinter = window.localStorage.getItem('validar_selectedPrinter');
+            
             // Create print doc and mark as printed
+            const printArgs = generatePrintArgs(Registrant, currentPrinter);
 
-            // Navigate to thank you
+            // Print
+            return axios.post('Services/Methods.asmx/PrintBadge', JSON.stringify(printArgs), config);
+        })
+        .then((printResp) => {
+            let success = false;
+            if (!printResp.data.d.Fault) {
+                success = true;
+            } else {
+                message.error('There seems to be an issue printing this record. Please see the help desk.', 3);
+            }
 
-        }).catch((err) => {
+            this.props.history.push({
+                pathname: '/thankyou',
+                state: { success }
+            });
+        })        
+        .catch((err) => {
             console.log("ERROR");
             console.log(err);
             message.error('There seems to be an issue saving this record. Please see the help desk.', 3);

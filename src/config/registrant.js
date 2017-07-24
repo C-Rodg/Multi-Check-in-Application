@@ -139,3 +139,78 @@ const reflectTextNode = (responsesElement, elementId, textValue, xmlDoc) => {
         }
     }
 }
+
+// Generate printer args to send to service
+export const generatePrintArgs = (reg, printerName) => {
+
+    const printArgs = {
+        attendeeGuid: reg.AttendeeGuid,
+        documentId: 'badge',
+        markPrinted: true,
+        printDocument: null,
+        printSettingsXml: null,
+        printToImage: false,
+        printerName,
+        registrantDocument: null
+    };
+
+    printArgs.printDocument = generatePrintDoc(reg);
+    console.log(printArgs);
+
+    return printArgs;
+};
+
+// Generate printdoc to send
+const generatePrintDoc = (reg) => {
+    
+    // Print Doc
+    const printDocString = '<print><printitems></printitems></print>';
+    const printParser = new DOMParser();
+    const printDoc = printParser.parseFromString(printDocString, 'application/xml');
+    const items = printDoc.getElementsByTagName('printitems')[0];
+
+    // Survey Data Doc
+    const surveyData = reg.SurveyData ? reg.SurveyData : '<result><responses></responses></result>';
+    const formParser = new DOMParser();
+    const formDoc = formParser.parseFromString(surveyData, 'application/xml');
+    const rootFormNode = formDoc.firstChild;
+    const responsesElement = rootFormNode.firstChild;
+    
+    // Get Printed fields
+    const name = reg.FirstName + ' ' + reg.LastName;
+    const company = reg.Company;
+    const title = getTextFromXml(responsesElement, 'qrTitle');
+    const role = getTextFromXml(responsesElement, 'qrJobRole');
+
+    // Add to print doc
+    appendXmlPrintItem(printDoc, 'slot1', name);
+    appendXmlPrintItem(printDoc, 'slot2', company);
+    appendXmlPrintItem(printDoc, 'slot3', title);
+    appendXmlPrintItem(printDoc, 'slot4', role);
+
+    return (new XMLSerializer).serializeToString(printDoc);
+};
+
+// Append new print item to print doc
+const appendXmlPrintItem = (printDoc, id, val) => {
+    const items = printDoc.getElementsByTagName('printitems')[0];
+    const newEl = printDoc.createElement('printitem');
+    newEl.setAttribute('id', id);
+    newEl.textContent = val;
+    items.appendChild(newEl);
+};
+
+// Get text from xml parsed survey data
+const getTextFromXml = (responsesElement, elementId) => {
+    if ( elementId && elementId != "" ) {
+        const existingElements = responsesElement.getElementsByTagName(elementId);
+        if ( (existingElements != null) && (existingElements.length > 0) ) {
+            const node = existingElements[0];
+            const textNode = node.firstChild;
+            if ( textNode != null ) {
+                return textNode.textContent;
+            }
+        }
+    }
+    return "";
+};
