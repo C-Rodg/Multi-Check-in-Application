@@ -138,14 +138,6 @@ class SearchBox extends Component {
             // Display Message and stop loading
             message.error('There seems to be an issue searching...', 3);
             this.setState({ loading: false });
-
-            // TESTING
-            //this.props.history.push('/walkin', { event: this.state.selectedEvent });
-            this.props.history.push({
-                pathname: '/walkin',
-                state: { event: this.state.selectedEvent }
-            });
-            //this.setState({ registrants: regs });
         });
     }
 

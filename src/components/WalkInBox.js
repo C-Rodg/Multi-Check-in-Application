@@ -48,7 +48,7 @@ class WalkInBox extends Component {
     // Check if app is in invalid state
     componentWillMount() {
         if (!this.state.event.campaign) {
-            message.error('Something appears to be wrong. Please go back and try again...', 3);
+            message.error('Something appears to be wrong. Please go back and try again...', 5);
         }
     }
 
@@ -247,7 +247,7 @@ class WalkInBox extends Component {
                                         {
                                             (!this.state.event.coworking && this.state.settings.prereg ) ?
                                             <Row style={walkInBoxStyles.row}>
-                                                <Col span={10} style={walkInBoxStyles.optInLabel} className="req">Allow Sponsor communication?</Col>
+                                                <Col span={10} style={walkInBoxStyles.optInLabel} className="req">Allow Sponsor Communication?</Col>
                                                 <Col span={14}>
                                                     <Select style={{width: '100%'}} size="large" value={form.qrPartnerQuestion} onChange={(ev) => this.onInputChange(ev, 'qrPartnerQuestion')}>
                                                         <Option value="Yes">Yes</Option>
