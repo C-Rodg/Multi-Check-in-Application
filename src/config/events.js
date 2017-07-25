@@ -2,20 +2,20 @@ export const eventList = [
     {
         name: 'AWS DevOps Best Practices Day',
         campaign: '1293849a5sdkf',
-        startDate: '2017-07-20',
-        endDate: '2017-07-25'
+        startDate: '2017-07-25',
+        endDate: '2017-07-30'
     },    
     {
         name: 'VC 201 | The Investment Memo',
         campaign: '12938249asdkf',
-        startDate: '2017-07-20',
-        endDate: '2017-07-25'
+        startDate: '2017-07-25',
+        endDate: '2017-07-30'
     },
     {
         name: 'Getting Started and Best Practices with AWS IoT Day',
         campaign: '2222zaksjdkfk',
-        startDate: '2017-07-19',
-        endDate: '2017-07-19'
+        startDate: '2017-07-25',
+        endDate: '2017-07-30'
     },
     {
         name: 'IoT Deep Dive Workshop Day',

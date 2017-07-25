@@ -16,7 +16,7 @@ const RegistrantTile = (props) => {
 
 const regTileStyles = {
     link : {
-        margin: '10px 15px',
+        //margin: '10px 15px',
         display: 'block',
         boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
         backgroundColor: '#2F3842',
@@ -29,7 +29,8 @@ const regTileStyles = {
     },
     textSub: {
         fontWeight: '200',
-        color: '#fff'
+        color: '#fff',
+        fontSize: '1.3rem'
     },
     line: {
         backgroundColor: '#ff9900',

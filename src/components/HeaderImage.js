@@ -13,7 +13,7 @@ const HeaderImage = ({showBack}) => {
                 :
                 ""
             }            
-            <img src={require('../static/bg-nyc.jpg')} alt="Amazon" />
+            <img src={require('../static/bg-nyc.png')} alt="Amazon" />
         </div>
     );
 };
@@ -25,7 +25,7 @@ const headerStyles = {
     },
     back: {
         position: 'absolute',
-        top: '15px',
+        top: '5px',
         left: '15px',
         fontSize: '4rem',
         color: '#2F3842'

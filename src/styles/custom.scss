@@ -127,6 +127,10 @@ a:focus {
     color: #fff;
 }
 
+.ant-input {
+    font-size: 16px;
+}
+
 .ant-input-affix-wrapper:hover .ant-input,
 .ant-input:hover,
 .ant-input:focus {
@@ -134,11 +138,9 @@ a:focus {
     box-shadow: none;
 }
 
-
 .ant-input-search-icon:hover {
     color: $darkGray;
 }
-
 
 .ant-switch-checked {
     border-color: $yellow;

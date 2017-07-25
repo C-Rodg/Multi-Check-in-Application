@@ -10,6 +10,8 @@ yarn.lock
 # Images
 src/static/bg-nyc.jpg
 src/static/bg-sf.jpg
+src/static/bg-nyc.png
+src/static/bg-sf.png
 src/mock/
 src/config/amazonDef.txt
 src/config/aws_PRINT_SETTINGS.xml

@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 
 const EventItem = (props) => {
     return (
-        <Col span={6} style={eventItemStyles.column}>
+        <Col span={5} style={eventItemStyles.column}>
             <Link to={{ pathname:"/search", state: {event: props }}} style={eventItemStyles.link}>
-                <span>{props.name}</span>
+                <span style={eventItemStyles.spanText}>{props.name}</span>
             </Link>
             <span className="line" style={eventItemStyles.line}></span>
         </Col>
     );
-};
+}; 
 
 const eventItemStyles = {
     column: {
@@ -29,7 +29,7 @@ const eventItemStyles = {
     },
     link: {
         color: '#fff',
-        fontSize: '3rem',
+        fontSize: '2rem',
         flexGrow: '1',
         display: 'flex',
         alignItems: 'center'
@@ -40,6 +40,10 @@ const eventItemStyles = {
         height: '5px',
         marginBottom: '22px',
         borderRadius: '2px'
+    },
+    spanText: {
+        width: '87%',
+        margin: '0 auto'
     }
 };
 

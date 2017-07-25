@@ -6,7 +6,7 @@ import EventItem from './EventItem';
 const EventListBox = () => {
     return (
         <div className="eventlist-box" style={eventListStyles}>
-            <Row type="flex" justify="space-around" align="middle">
+            <Row type="flex" justify="space-around">
                 {window.todaysEvents && window.todaysEvents.map((event) => {
                     return (
                         <EventItem {...event} key={event.campaign} />

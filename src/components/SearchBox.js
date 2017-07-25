@@ -8,73 +8,6 @@ import Loading from './Loading';
 import RegistrantTile from './RegistrantTile';
 import WalkInButton from './WalkInButton';
 
-const regs = [
-    {
-        Attended: false,
-        AttendeeGuid: '123-123-1',
-        Company: 'Validar, Inc.',
-        FirstName: 'Omeed',
-        LastName: 'Jaws',
-        ScanKey: 'T010001'
-    },
-    {
-        Attended: false,
-        AttendeeGuid: '123-123-2',
-        Company: 'Disneyland Parent Company',
-        FirstName: 'Tyler',
-        LastName: 'Josh-Jackson',
-        ScanKey: 'T010002'
-    },
-    {
-        Attended: false,
-        AttendeeGuid: '123-123-3',
-        Company: 'Toronto Skyline Org.',
-        FirstName: 'Jonas',
-        LastName: 'Valetnucia',
-        ScanKey: 'T010003'
-    },
-    {
-        Attended: false,
-        AttendeeGuid: '123-123-4',
-        Company: 'Miller, Corp.',
-        FirstName: 'Cynthia',
-        LastName: 'Mason',
-        ScanKey: 'T010004'
-    },
-    {
-        Attended: false,
-        AttendeeGuid: '123-123-5',
-        Company: 'Amazon - AWS',
-        FirstName: 'Muni',
-        LastName: 'Muhammed',
-        ScanKey: 'T010005'
-    },
-    {
-        Attended: false,
-        AttendeeGuid: '123-123-6',
-        Company: 'Wilson Basketballs',
-        FirstName: 'Mike',
-        LastName: 'Doras',
-        ScanKey: null
-    },
-    {
-        Attended: false,
-        AttendeeGuid: '123-123-7',
-        Company: 'MySpace',
-        FirstName: 'Tom',
-        LastName: 'Douglas',
-        ScanKey: null
-    },
-    // {
-    //     Attended: false,
-    //     AttendeeGuid: '123-123-8',
-    //     Company: 'Facebook',
-    //     FirstName: 'Timmy',
-    //     LastName: 'Groover',
-    //     ScanKey: null
-    // }
-];
-
 class SearchBox extends Component {
     constructor(props) {
         super(props);
@@ -142,11 +75,12 @@ class SearchBox extends Component {
     }
 
     generateRegistrantTiles() {
+        // align="middle"
         return (
-            <Row type="flex" justify="center" align="middle" style={searchBoxStyles.listRow} gutter={16}>                
+            <Row type="flex" justify="space-around"  style={searchBoxStyles.listRow} gutter={12}>                
                 {this.state.registrants.map((reg) => {
                     return (
-                        <Col span={6} key={reg.AttendeeGuid}>
+                        <Col span={6} key={reg.AttendeeGuid} style={searchBoxStyles.item} >
                             <RegistrantTile registrant={reg} event={this.state.selectedEvent} />
                         </Col>
                     );
@@ -161,7 +95,7 @@ class SearchBox extends Component {
     // Display Component
     render() {
         return (
-            <div className="search-box" style={searchBoxStyles.wrapper} >
+            <div className="search-box" style={(this.state && this.state.registrants && this.state.registrants.length > 8) ? searchBoxStyles.wrapperAbs : searchBoxStyles.wrapper} >
                 <Row type="flex" justify="space-around" align="middle" style={searchBoxStyles.searchRow}>
                     <Col span={12} >
                         {
@@ -170,7 +104,6 @@ class SearchBox extends Component {
                             :
                             <Search 
                                 id="search-box-input"
-                                style={searchBoxStyles.input}
                                 placeholder="Email Address or Last Name.."
                                 size="large"
                                 onSearch={this.onSearchSubmit}
@@ -196,16 +129,28 @@ const searchBoxStyles = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        textAlign: 'center'      
+        textAlign: 'center',
+        padding: '15px'    
+    },
+    wrapperAbs: {
+        position: 'absolute',
+        top: '200px',
+        textAlign: 'center',
+        padding: '15px'
     },
     searchRow: {
-        marginTop: '-120px'
+        marginBottom: '20px',
+        alignItems: 'center'
     },
     listRow: {
-        marginTop: '25px'
+        // marginTop: '25px',
+        backgroundColor: '#fff'
     },
     endRow: {
         paddingBottom: '15px'
+    },
+    item: {
+        marginBottom: '6px'
     }
 }
 

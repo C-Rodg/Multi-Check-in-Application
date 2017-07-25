@@ -247,8 +247,8 @@ class WalkInBox extends Component {
                                         {
                                             (!this.state.event.coworking && this.state.settings.prereg ) ?
                                             <Row style={walkInBoxStyles.row}>
-                                                <Col span={10} style={walkInBoxStyles.optInLabel} className="req">Allow Sponsor Communication?</Col>
-                                                <Col span={14}>
+                                                <Col span={17} style={walkInBoxStyles.optInLabel} className="req">Allow Sponsor Communication?</Col>
+                                                <Col span={7}>
                                                     <Select style={{width: '100%'}} size="large" value={form.qrPartnerQuestion} onChange={(ev) => this.onInputChange(ev, 'qrPartnerQuestion')}>
                                                         <Option value="Yes">Yes</Option>
                                                         <Option value="No">No</Option>                                         
