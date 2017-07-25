@@ -4,25 +4,23 @@ import { Link } from 'react-router-dom';
 const RegistrantTile = (props) => {   
     const { event, registrant } = props;
     return (
-        <div className="registrant-tile">
+        <div className="registrant-tile" style={regTileStyles.tile}>
             <Link to={{ pathname:"/registrant", state: { event, registrant }}} style={regTileStyles.link} >
                 <h1 style={regTileStyles.text}>{registrant.FirstName + " " + registrant.LastName}</h1>
-                <h2 style={regTileStyles.textSub}>{registrant.Company}</h2>
-                <span className="line" style={regTileStyles.line}></span>
+                <h2 style={regTileStyles.textSub}>{registrant.Company}</h2>                
             </Link>
+            <span className="line" style={regTileStyles.line}></span>
         </div>
     );
 };
 
 const regTileStyles = {
     link : {
-        //margin: '10px 15px',
-        display: 'block',
-        boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-        backgroundColor: '#2F3842',
-        borderRadius: '4px',
         padding: '10px',
-        minHeight: '96px'
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        height: 'calc(100% - 22px)'
     },
     text: {
         color: '#fff'
@@ -39,6 +37,12 @@ const regTileStyles = {
         margin: '8px auto 0',
         borderRadius: '2px',
         display: 'block'
+    },
+    tile: {
+        height: '100%',
+        boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
+        backgroundColor: '#2F3842',
+        borderRadius: '4px',
     }
 };
 

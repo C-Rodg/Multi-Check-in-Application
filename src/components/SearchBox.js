@@ -60,8 +60,8 @@ class SearchBox extends Component {
                         state: { event: this.state.selectedEvent, searchTerm: val }
                     });
                 } else {
-                    // Display list of registrants
-                    this.setState({ loading: false, registrants: d.Registrants });
+                    // Display list of registrants                    
+                    this.setState({ loading: false, registrants: d.Registrants }); 
                 }                
             } else {
                 message.error('There seems to be an issue searching...', 3);
@@ -75,9 +75,8 @@ class SearchBox extends Component {
     }
 
     generateRegistrantTiles() {
-        // align="middle"
         return (
-            <Row type="flex" justify="space-around"  style={searchBoxStyles.listRow} gutter={12}>                
+            <Row type="flex" justify="space-around" gutter={12}>                
                 {this.state.registrants.map((reg) => {
                     return (
                         <Col span={6} key={reg.AttendeeGuid} style={searchBoxStyles.item} >
@@ -85,7 +84,7 @@ class SearchBox extends Component {
                         </Col>
                     );
                 })}  
-                <Col span={24} style={searchBoxStyles.endRow} >
+                <Col span={24} >
                     <WalkInButton event={this.state.selectedEvent} />
                 </Col>              
             </Row>
@@ -136,21 +135,15 @@ const searchBoxStyles = {
         position: 'absolute',
         top: '200px',
         textAlign: 'center',
-        padding: '15px'
+        padding: '15px',
+        backgroundColor: '#fff'
     },
     searchRow: {
         marginBottom: '20px',
         alignItems: 'center'
     },
-    listRow: {
-        // marginTop: '25px',
-        backgroundColor: '#fff'
-    },
-    endRow: {
-        paddingBottom: '15px'
-    },
     item: {
-        marginBottom: '6px'
+        marginBottom: '15px'
     }
 }
 

@@ -13,7 +13,7 @@ const WalkInButton = ({event}) => {
 };
 
 const walkInBtnStyles = {
-    marginTop: '25px',
+    margin: '10px auto 15px auto',
     fontSize: '24px',
     padding: '10px 20px',
     height: 'auto'
