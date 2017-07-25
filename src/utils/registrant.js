@@ -34,8 +34,6 @@ export const loadRegistrantIntoForm = (existingReg) => {
             newForm[prop] = getTextFromXml(responsesElement, prop);
         }
     }
-
-    console.log(newForm);
     return newForm;
 };
 
@@ -87,6 +85,32 @@ export const generateRegistrant = () => {
         WalkIn: false
     };
 };
+
+// Copy a master record
+export const copyMasterRecord = (reg) => {
+    delete reg.__type;
+    return Object.assign({}, reg, {
+        Attended: false,
+        AttendeeGuid: null,
+        AttendeeId: null,
+        AttendeeType: null,
+        BadgeId: null,
+        FirstCheckInDateTime: null,
+        FirstPrintDateTime: null,
+        OnSiteModifiedDateTime: null,
+        PrePrint: false,
+        PreRegistrationDateTime: null,
+        Printed: false,
+        RegistrantId: null,
+        ScanKey: null,
+        ServerGuid: null,
+        ServerName: null,
+        StationName: null,
+        UploadGuid: null,
+        Uploaded: false,
+        WalkIn: false
+    });
+}
 
 // Mark registrant as a walkIn
 export const markAsWalkIn = (reg) => {

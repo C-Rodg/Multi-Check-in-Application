@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { company_size, company_type, job_role, industry, levels,
     countryList, states_us, states_australia, states_brazil, states_canada, states_china, states_germany, states_hongkong, states_india } from '../config/dropdowns';
 
-import { loadRegistrantIntoForm, generateFreshForm } from '../config/registrant';
+import { loadRegistrantIntoForm, generateFreshForm, requiredFields, copyMasterRecord, assignRegistrantProps, assignStationName, assignAsAttended, convertFormToSurveyData, generatePrintArgs } from '../utils/registrant';
 
 class RegistrantBox extends Component {
     constructor(props) {
@@ -56,7 +56,8 @@ class RegistrantBox extends Component {
                 stateList,
                 showStateOther,
                 event: props.location.state.event,
-                settings: JSON.parse(settingsStr)
+                settings: JSON.parse(settingsStr),
+                masterRecord: props.location.state.registrant
             };
         } else {            
             this.state = {
@@ -64,7 +65,8 @@ class RegistrantBox extends Component {
                 stateList: states_us,
                 showStateOther: false,
                 event: {},
-                settings: { walkin: true, prereg: true }
+                settings: { walkin: true, prereg: true },
+                masterRecord: {}
             };
         }
 
@@ -73,7 +75,7 @@ class RegistrantBox extends Component {
 
     // Check if app is in invalid state
     componentWillMount() {
-        if (!this.state.event.campaign || !this.props.location.state.registrant) {
+        if (!this.state.event.campaign || (!this.state.masterRecord.hasOwnProperty('AttendeeGuid')) ) {
             message.error('Something appears to be very wrong. Please go back and try again...', 5);
         }
     }
@@ -131,6 +133,68 @@ class RegistrantBox extends Component {
     // Form submitted
     onFormSubmit(ev) {
         ev.preventDefault();
+
+        // Check form validity
+        let errorMsg = "";
+        const { form, event } = this.state;
+        for (let i = 0, j = requiredFields.length; i < j; i++) {
+            const { tag } = requiredFields[i];
+            if (!form[tag]) {
+                if (tag === 'qrState' && this.showStateOther) {}
+                else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg || this.state.event.coworking)) {}
+                else if (tag === 'qrAccountID' && (!this.state.event.campaign)) {}
+                else {
+                    errorMsg = `${requiredFields[i].name} is a required field.`;
+                    break;
+                }
+            }
+        }
+        if (errorMsg) {
+            message.error(errorMsg, 3);
+            return false;
+        }
+
+        // Make copy of master record, assign station name, mark as attended, assign new registrant props
+        const newRegistrant = assignRegistrantProps(assignAsAttended(assignStationName(copyMasterRecord(this.state.masterRecord))), form);
+        
+        // Update survey data
+        newRegistrant.SurveyData = convertFormToSurveyData(form, newRegistrant.SurveyData);
+
+        // Assign attendee type
+        newRegistrant.AttendeeType = event.name;
+
+        const data = { registrant: newRegistrant };
+        const config = {
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json'
+            }
+        };
+
+        // Upsert registrant 
+        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config).then((resp) => {
+            const { Registrant } = resp.data.d;
+            const currentPrinter = window.localStorage.getItem('validar_selectedPrinter');
+
+            const printArgs = generatePrintArgs(Registrant, currentPrinter);
+            
+            // Print Badge
+            return axios.post('Services/Methods.asmx/PrintBadge', JSON.stringify(printArgs), config);
+        })
+        .then((printResp) => {
+            if (printResp.data.d.Fault) {
+                message.error('There seems to be an issue printing this record. Please see the help desk.', 3);
+                return false;
+            }
+
+            this.props.history.push({
+                pathname: '/thankyou'
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            message.error('There seems to be an issue saving this record. Please see the help desk.', 3);
+        });
     }
 
     render() {

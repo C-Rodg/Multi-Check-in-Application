@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { company_size, company_type, job_role, industry, levels,
     countryList, states_us, states_australia, states_brazil, states_canada, states_china, states_germany, states_hongkong, states_india } from '../config/dropdowns';
-import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName, assignRegistrantProps, assignAsAttended, generatePrintArgs } from '../config/registrant';
+import { generateFreshForm, requiredFields, convertFormToSurveyData, generateRegistrant, markAsWalkIn, assignStationName, assignRegistrantProps, assignAsAttended, generatePrintArgs } from '../utils/registrant';
 
 class WalkInBox extends Component {
     constructor(props) {
@@ -112,13 +112,10 @@ class WalkInBox extends Component {
         for (let i = 0, j = requiredFields.length; i < j; i++) {
             const { tag } = requiredFields[i];
             if (!form[tag]) {
-                if(tag === 'qrState' && this.state.showStateOther) {
-                    // do nothing...
-                } else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg || this.state.event.coworking)) {
-                    // do nothing
-                } else if (tag === 'qrAccountID' && (!this.state.event.campagin)) {
-                    // do nothing
-                } else {
+                if(tag === 'qrState' && this.state.showStateOther) { } 
+                else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg || this.state.event.coworking)) { } 
+                else if (tag === 'qrAccountID' && (!this.state.event.campaign)) { } 
+                else {
                     errorMsg = `${requiredFields[i].name} is a required field.`;
                     break;
                 }
@@ -157,11 +154,9 @@ class WalkInBox extends Component {
             return axios.post('Services/Methods.asmx/PrintBadge', JSON.stringify(printArgs), config);
         })
         .then((printResp) => {
-            let success = false;
-            if (!printResp.data.d.Fault) {
-                success = true;
-            } else {
+            if (printResp.data.d.Fault) {
                 message.error('There seems to be an issue printing this record. Please see the help desk.', 3);
+                return false;
             }
 
             this.props.history.push({
@@ -169,7 +164,6 @@ class WalkInBox extends Component {
             });
         })        
         .catch((err) => {
-            console.log("ERROR");
             console.log(err);
             message.error('There seems to be an issue saving this record. Please see the help desk.', 3);
         });
