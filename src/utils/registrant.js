@@ -197,7 +197,6 @@ export const generatePrintArgs = (reg, printerName) => {
     };
 
     printArgs.printDocument = generatePrintDoc(reg);
-    console.log(printArgs);
 
     return printArgs;
 };

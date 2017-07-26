@@ -46,11 +46,9 @@ class SearchBox extends Component {
                     Comparison: "Contains",//"Equals",
                     Value: val
                 }]
-                // TODO: SEARCH FOR NULL Scan KEYS  AND SEE IF WALK-INS ARE ALLOWED and see if EventName === selected event name
             }
         };
         axios.post('Services/Methods.asmx/SearchRegistrants', inputArgs).then((resp) => {
-            console.log(resp);
             const { d } = resp.data;
             if (d && !d.Fault) {
                 // Get just the master records

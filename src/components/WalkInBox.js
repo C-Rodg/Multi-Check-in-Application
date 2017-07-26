@@ -139,8 +139,6 @@ class WalkInBox extends Component {
         // Generate registrant, mark as walk in, assign station name, assign basic props
         const masterRecord = assignRegistrantProps(assignStationName(markAsWalkIn(generateRegistrant())), form);
         masterRecord.SurveyData = convertFormToSurveyData(form);
-        console.log("MASTER RECORD IS:");
-        console.log(masterRecord);
         const newRegistrant = assignAsAttended(masterRecord);        
         newRegistrant.AttendeeType = event.name;        
         const data = {
@@ -159,8 +157,6 @@ class WalkInBox extends Component {
         .then((masterResp) => {
             const { Registrant } = masterResp.data.d;
             newRegistrant.ScanKey = Registrant.BadgeId;
-            console.log("NEW REGISTRANT IS:");
-            console.log(newRegistrant);
             const newData = {
                 registrant: newRegistrant
             };

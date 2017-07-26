@@ -17,7 +17,7 @@ const ContentBox = () => {
             <Switch>
                 <Route exact path="/settings" render={(props) => (
                     <div style={contentStyles.routerRoot}>
-                        <HeaderImage showBack={true} />
+                        <HeaderImage showBack={true} showReporting={true}/>
                         <div className="content-box" style={contentStyles.contentBox}>
                             <StatusText {...props} status="Settings" />                        
                             <SettingsBox {...props} />
@@ -70,6 +70,15 @@ const ContentBox = () => {
                         </div>
                     </div>
                 )} /> 
+                <Route exact path="/reporting" render={(props) => (
+                    <div style={contentStyles.routerRoot}>
+                        <HeaderImage showBack={true} />
+                        <div className="content-box" style={contentStyles.contentBox}>
+                            <StatusText {...props} status="Reporting" />
+                        
+                        </div>
+                    </div>
+                )} />
                 <Redirect from="/" exact to="/settings" />        
             </Switch>            
         );
