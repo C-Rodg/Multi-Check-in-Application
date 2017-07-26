@@ -32,14 +32,14 @@ const headerStyles = {
     },
     back: {
         position: 'absolute',
-        top: '5px',
+        top: '0',
         left: '15px',
         fontSize: '4rem',
         color: '#2F3842'
     },
     reporting: {
         position: 'absolute',
-        top: '5px',
+        top: '0',
         right: '15px',
         fontSize: '4rem',
         color: '#2F3842'

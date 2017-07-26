@@ -11,6 +11,7 @@ import RegistrantBox from './RegistrantBox';
 import ThankYouBox from './ThankYouBox';
 import SettingsBox from './SettingsBox';
 import SecretSettingsButton from './SecretSettingsButton';
+import ReportingBox from './ReportingBox';
 
 const ContentBox = () => {
         return (
@@ -74,8 +75,8 @@ const ContentBox = () => {
                     <div style={contentStyles.routerRoot}>
                         <HeaderImage showBack={true} />
                         <div className="content-box" style={contentStyles.contentBox}>
-                            <StatusText {...props} status="Reporting" />
-                        
+                            <StatusText {...props} status="Amazon Events" />
+                            <ReportingBox />
                         </div>
                     </div>
                 )} />
