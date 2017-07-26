@@ -14,8 +14,8 @@ export const eventList = [
     {
         name: 'Getting Started and Best Practices with AWS IoT Day',
         campaign: '2222zaksjdkfk',
-        startDate: '2017-07-25',
-        endDate: '2017-07-30'
+        startDate: '2017-07-30',
+        endDate: '2017-08-02'
     },
     {
         name: 'IoT Deep Dive Workshop Day',

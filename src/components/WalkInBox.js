@@ -11,12 +11,11 @@ import { generateFreshForm, requiredFields, convertFormToSurveyData, generateReg
 class WalkInBox extends Component {
     constructor(props) {
         super(props);
-
-        if (props.location && props.location.state && props.location.state.event) {
-            const settingsStr = window.localStorage.getItem(props.location.state.event.campaign);
+        const currentPrinter = window.localStorage.getItem('validar_selectedPrinter');
+        if (props.location && props.location.state) {
+            const { settings, searchTerm, event } = props.location.state;
             const newForm = generateFreshForm();
-            newForm.qrEventName = props.location.state.event.name;
-            const { searchTerm } = props.location.state;
+            newForm.qrEventName = event.name;
             if (searchTerm) {
                 if (searchTerm.indexOf('@') > -1) {
                     newForm.qrEmail = searchTerm;
@@ -28,16 +27,18 @@ class WalkInBox extends Component {
                 form: newForm,
                 stateList: states_us,
                 showStateOther: false,
-                event: props.location.state.event,
-                settings: JSON.parse(settingsStr)
-            };
+                event,
+                settings,
+                currentPrinter
+            };            
         } else {            
             this.state = {
                 form: generateFreshForm(),
                 stateList: states_us,
                 showStateOther: false,
                 event: {},
-                settings: { walkin: true, prereg: true }
+                settings: { walkin: true, prereg: true },
+                currentPrinter
             };
         }    
 
@@ -48,7 +49,10 @@ class WalkInBox extends Component {
     // Check if app is in invalid state
     componentWillMount() {
         if (!this.state.event.campaign) {
-            message.error('Something appears to be wrong. Please go back and try again...', 5);
+            message.error('Something appears to be wrong. Please go back and try again...', 4);
+        }
+        if (!this.state.currentPrinter) {
+            message.error("No printer selected. Please go back to settings and try again..", 5);
         }
     }
 
@@ -106,6 +110,12 @@ class WalkInBox extends Component {
     onFormSubmit(ev) {
         ev.preventDefault();
 
+        // Ensure there is a printer
+        if (!this.state.currentPrinter) {
+            message.error('No printer selected. Please go back to settings and try again..', 4);
+            return false;
+        }
+
         // Ensure all fields have been filled out
         let errorMsg = "";
         const { form, event } = this.state;
@@ -114,7 +124,7 @@ class WalkInBox extends Component {
             if (!form[tag]) {
                 if(tag === 'qrState' && this.state.showStateOther) { } 
                 else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg || this.state.event.coworking)) { } 
-                else if (tag === 'qrAccountID' && (!this.state.event.campaign)) { } 
+                else if (tag === 'qrAccountID' && (!this.state.event.coworking)) { } 
                 else {
                     errorMsg = `${requiredFields[i].name} is a required field.`;
                     break;
@@ -127,13 +137,14 @@ class WalkInBox extends Component {
         }        
 
         // Generate registrant, mark as walk in, assign station name, assign basic props
-        const registrant = assignAsAttended(assignRegistrantProps(assignStationName(markAsWalkIn(generateRegistrant())), form));
-        registrant.SurveyData = convertFormToSurveyData(form);
-        registrant.AttendeeType = event.name;
-        
-        console.log(registrant);
+        const masterRecord = assignRegistrantProps(assignStationName(markAsWalkIn(generateRegistrant())), form);
+        masterRecord.SurveyData = convertFormToSurveyData(form);
+        console.log("MASTER RECORD IS:");
+        console.log(masterRecord);
+        const newRegistrant = assignAsAttended(masterRecord);        
+        newRegistrant.AttendeeType = event.name;        
         const data = {
-            registrant
+            registrant: masterRecord
         };
         const config = {
             headers: {
@@ -142,13 +153,25 @@ class WalkInBox extends Component {
             }
         };
 
-        // Save registrant
-        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config).then((resp) => {
+        // Upload master registrant
+        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config)
+        // Mark scan key and upload dupe registrant
+        .then((masterResp) => {
+            const { Registrant } = masterResp.data.d;
+            newRegistrant.ScanKey = Registrant.BadgeId;
+            console.log("NEW REGISTRANT IS:");
+            console.log(newRegistrant);
+            const newData = {
+                registrant: newRegistrant
+            };
+            return axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(newData), config);
+        })     
+        // Send dupe registrant to printer   
+        .then((resp) => {
             const { Registrant } =  resp.data.d;
-            const currentPrinter = window.localStorage.getItem('validar_selectedPrinter');
             
             // Create print doc and mark as printed
-            const printArgs = generatePrintArgs(Registrant, currentPrinter);
+            const printArgs = generatePrintArgs(Registrant, this.state.currentPrinter);
 
             // Print
             return axios.post('Services/Methods.asmx/PrintBadge', JSON.stringify(printArgs), config);

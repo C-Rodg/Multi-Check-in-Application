@@ -7,18 +7,20 @@ import { withRouter } from 'react-router-dom';
 import { company_size, company_type, job_role, industry, levels,
     countryList, states_us, states_australia, states_brazil, states_canada, states_china, states_germany, states_hongkong, states_india } from '../config/dropdowns';
 
-import { loadRegistrantIntoForm, generateFreshForm, requiredFields, copyMasterRecord, assignRegistrantProps, assignStationName, assignAsAttended, convertFormToSurveyData, generatePrintArgs } from '../utils/registrant';
+import { loadRegistrantIntoForm, generateFreshForm, requiredFields, copyMasterRecord, 
+    assignRegistrantProps, assignStationName, assignAsAttended, convertFormToSurveyData, generatePrintArgs } from '../utils/registrant';
 
 class RegistrantBox extends Component {
     constructor(props) {
         super(props);
 
-        if (props.location && props.location.state && props.location.state.event ) {
-            const settingsStr = window.localStorage.getItem(props.location.state.event.campaign);
-            const form = props.location.state.registrant ? loadRegistrantIntoForm(props.location.state.registrant) : generateFreshForm();
-            form.qrEventName = props.location.state.event.name;    
-            let stateList = "";
-            let showStateOther = false;
+        const currentPrinter = window.localStorage.getItem('validar_selectedPrinter');
+        if (props.location && props.location.state ) {
+            const { settings, registrant, event } = props.location.state;
+            const form = loadRegistrantIntoForm(registrant);
+            form.qrEventName = event.name;
+            let stateList = '',
+                showStateOther = false;
             const country = form.qrCountry.toUpperCase();
             switch(country) {
                 case 'AUSTRALIA':
@@ -55,9 +57,10 @@ class RegistrantBox extends Component {
                 form,
                 stateList,
                 showStateOther,
-                event: props.location.state.event,
-                settings: JSON.parse(settingsStr),
-                masterRecord: props.location.state.registrant
+                event,
+                settings,
+                masterRecord: registrant,
+                currentPrinter
             };
         } else {            
             this.state = {
@@ -66,7 +69,8 @@ class RegistrantBox extends Component {
                 showStateOther: false,
                 event: {},
                 settings: { walkin: true, prereg: true },
-                masterRecord: {}
+                masterRecord: {},
+                currentPrinter
             };
         }
 
@@ -77,6 +81,9 @@ class RegistrantBox extends Component {
     componentWillMount() {
         if (!this.state.event.campaign || (!this.state.masterRecord.hasOwnProperty('AttendeeGuid')) ) {
             message.error('Something appears to be very wrong. Please go back and try again...', 5);
+        }
+        if (!this.state.currentPrinter) {
+            message.error('No printer selected. Please go back to settings and try again..', 4);
         }
     }
 
@@ -134,15 +141,21 @@ class RegistrantBox extends Component {
     onFormSubmit(ev) {
         ev.preventDefault();
 
+        // Check for printers
+        if (!this.state.currentPrinter) {
+            message.error('No printer selected. Please go back to settings and try again..', 4);
+            return false;
+        }
+
         // Check form validity
         let errorMsg = "";
         const { form, event } = this.state;
         for (let i = 0, j = requiredFields.length; i < j; i++) {
             const { tag } = requiredFields[i];
             if (!form[tag]) {
-                if (tag === 'qrState' && this.showStateOther) {}
+                if (tag === 'qrState' && this.state.showStateOther) {}
                 else if (tag === 'qrPartnerQuestion' && (!this.state.settings.prereg || this.state.event.coworking)) {}
-                else if (tag === 'qrAccountID' && (!this.state.event.campaign)) {}
+                else if (tag === 'qrAccountID' && (!this.state.event.coworking)) {}
                 else {
                     errorMsg = `${requiredFields[i].name} is a required field.`;
                     break;
@@ -163,6 +176,9 @@ class RegistrantBox extends Component {
         // Assign attendee type
         newRegistrant.AttendeeType = event.name;
 
+        // Assign Scan Key
+        newRegistrant.ScanKey = this.state.masterRecord.BadgeId;
+
         const data = { registrant: newRegistrant };
         const config = {
             headers: {
@@ -171,12 +187,13 @@ class RegistrantBox extends Component {
             }
         };
 
-        // Upsert registrant 
-        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config).then((resp) => {
+        // Upsert dupe record
+        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config)
+        // Print dupe record
+        .then((resp) => {
             const { Registrant } = resp.data.d;
-            const currentPrinter = window.localStorage.getItem('validar_selectedPrinter');
 
-            const printArgs = generatePrintArgs(Registrant, currentPrinter);
+            const printArgs = generatePrintArgs(Registrant, this.state.currentPrinter);
             
             // Print Badge
             return axios.post('Services/Methods.asmx/PrintBadge', JSON.stringify(printArgs), config);

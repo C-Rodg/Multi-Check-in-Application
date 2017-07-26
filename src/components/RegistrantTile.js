@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const RegistrantTile = (props) => {   
-    const { event, registrant } = props;
+    const { event, registrant, settings } = props;
     return (
         <div className="registrant-tile" style={regTileStyles.tile}>
-            <Link to={{ pathname:"/registrant", state: { event, registrant }}} style={regTileStyles.link} >
+            <Link to={{ pathname:"/registrant", state: { event, registrant, settings }}} style={regTileStyles.link} >
                 <h1 style={regTileStyles.text}>{registrant.FirstName + " " + registrant.LastName}</h1>
                 <h2 style={regTileStyles.textSub}>{registrant.Company}</h2>                
             </Link>

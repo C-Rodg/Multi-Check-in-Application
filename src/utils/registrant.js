@@ -243,7 +243,7 @@ const appendXmlPrintItem = (printDoc, id, val) => {
 };
 
 // Get text from xml parsed survey data
-const getTextFromXml = (responsesElement, elementId) => {
+export const getTextFromXml = (responsesElement, elementId) => {
     if ( elementId && elementId != "" ) {
         const existingElements = responsesElement.getElementsByTagName(elementId);
         if ( (existingElements != null) && (existingElements.length > 0) ) {
