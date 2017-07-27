@@ -15,6 +15,9 @@ const App = () => {
 
     // Determine today's events
     const today = moment();
+    if (!window.eventList) {
+        window.eventList = [];
+    }
     window.todaysEvents = window.eventList.filter((event) => {
         return today.isBetween(event.startDate, event.endDate, 'day', '[]');
     });
