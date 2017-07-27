@@ -18,5 +18,8 @@
 </head>
 <body>
 	<div id="container"></div>
+	<% if (htmlWebpackPlugin.options.env) { %>
+		<script type="text/javascript" src="events.js"></script>
+	<% } %>
 </body>
 </html>

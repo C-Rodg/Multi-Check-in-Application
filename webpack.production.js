@@ -84,7 +84,8 @@ module.exports = {
         new ExtractTextPlugin('styles.css'),
         new HtmlWebpackPlugin({
             title: 'Amazon Lofts', 
-            template: 'src/index.html'
+            template: 'src/index.html',
+            env: true
         }),
         new UglifyJsPlugin({
             beautify: false,

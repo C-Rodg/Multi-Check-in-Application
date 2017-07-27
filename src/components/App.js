@@ -4,12 +4,14 @@ import moment from 'moment';
 
 import HeaderImage from './HeaderImage';
 import ContentBox from './ContentBox';
-import { eventList } from '../config/events';
+import { eventList } from '../config/demo_events';
 
 const App = () => {
     
     // For Testing, production link to external event script
-    window.eventList = eventList;
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {        
+        window.eventList = eventList;
+    }
 
     // Determine today's events
     const today = moment();
