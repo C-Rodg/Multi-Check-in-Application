@@ -6,7 +6,7 @@
   "scripts": {
     "test": "webpack-dev-server --config ./webpack.dev.js  --inline --hot --port 3000",
     "watch": "rimraf dist && webpack --config ./webpack.dev.js --progress --profile --colors --watch",
-    "build": "rimraf dist && webpack --config ./webpack.production.js --progress --profile --colors && copy src\\config\\production_events.js dist\\events.js"
+    "build": "rimraf dist && webpack --config ./webpack.production.js --progress --profile --colors && copy src\\config\\production_events.js dist\\events.js && copy src\\static\\Web.config dist\\Web.config"
   },
   "dependencies": {
     "antd": "^2.12.0",

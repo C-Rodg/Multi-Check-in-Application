@@ -167,10 +167,8 @@ class RegistrantBox extends Component {
             return false;
         }
 
-        // Make copy of master record, assign station name, mark as attended, assign new registrant props
+        // Copy Master, assign station name, assign attended, assign registrant props, convert current form to Survey Data        
         const newRegistrant = assignRegistrantProps(assignAsAttended(assignStationName(copyMasterRecord(this.state.masterRecord))), form);
-        
-        // Update survey data
         newRegistrant.SurveyData = convertFormToSurveyData(form, newRegistrant.SurveyData);
 
         // Assign attendee type
@@ -179,7 +177,8 @@ class RegistrantBox extends Component {
         // Assign Scan Key
         newRegistrant.ScanKey = this.state.masterRecord.BadgeId;
 
-        const data = { registrant: newRegistrant };
+        const dupeData = { registrant: newRegistrant };
+
         const config = {
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -187,8 +186,8 @@ class RegistrantBox extends Component {
             }
         };
 
-        // Upsert dupe record
-        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(data), config)
+        // Upsert dupe record        
+        axios.post('Services/Methods.asmx/UpsertRegistrant', JSON.stringify(dupeData), config)        
         // Print dupe record
         .then((resp) => {
             const { Registrant } = resp.data.d;

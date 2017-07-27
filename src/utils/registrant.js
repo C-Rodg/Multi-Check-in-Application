@@ -32,6 +32,19 @@ export const loadRegistrantIntoForm = (existingReg) => {
     for(let prop in newForm) {
         if (newForm.hasOwnProperty(prop)) {
             newForm[prop] = getTextFromXml(responsesElement, prop);
+            if (prop === 'qrCountry' && newForm[prop] && newForm[prop].length === 2) {
+                if (newForm[prop] === 'US') {
+                    newForm[prop] = 'United States';
+                } else if (newForm[prop] === 'CA') {
+                    newForm[prop] = 'Canada';
+                } else if (newForm[prop] === 'BR') {
+                    newForm[prop] = 'Brazil';
+                } else if (newForm[prop] === 'DE') {
+                    newForm[prop] = 'Germany';
+                } else if (newForm[prop] === 'IN') {
+                    newForm[prop] = 'India';
+                }
+            }
         }
     }
     return newForm;
