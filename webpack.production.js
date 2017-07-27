@@ -7,7 +7,9 @@ const path = require('path'),
 module.exports = {
     devtool: 'source-map',
     target: 'web',
-    entry: './src/index.js',
+    entry: {
+        app: './src/index.js'
+    },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: 'bundle.js'
@@ -80,7 +82,7 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': { NODE_ENV: JSON.stringify('production') }
-        }),
+        }),        
         new ExtractTextPlugin('styles.css'),
         new HtmlWebpackPlugin({
             title: 'Amazon Lofts', 
@@ -92,6 +94,6 @@ module.exports = {
             mangle: { screw_ie8: true, warnings: false },
             compress: { screw_ie8: true, warnings: false },
             comments: false
-        })
+        })      
     ]
 };

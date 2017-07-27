@@ -2,7 +2,8 @@ const path = require('path'),
     webpack = require('webpack'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
+    UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin'),
+    BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     devtool: 'inline-source-map',
@@ -91,7 +92,8 @@ module.exports = {
             compress: { screw_ie8: true, warnings: false },
             comments: true,
             sourceMap: true
-        })
+        }),
+        new BundleAnalyzerPlugin()
     ],
     devServer: {
         contentBase: path.resolve(__dirname, './src'),

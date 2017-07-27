@@ -25,16 +25,19 @@ const ContentBox = () => {
                         </div>
                     </div>
                 )} />
-                <Route exact path="/welcome" render={(props) => (
-                    <div style={contentStyles.routerRoot}>
-                        <SecretSettingsButton />                        
-                        <HeaderImage showBack={false}/>
-                        <div className="content-box" style={contentStyles.contentBox}>
-                            <StatusText {...props} status="Why are you here today?" />
-                            <EventListBox {...props} />
+                <Route exact path="/welcome" render={(props) => {
+                    const msg = (window.todaysEvents && window.todaysEvents.length > 0) ? 'Why are you here today?' : 'No events today...';
+                    return (
+                        <div style={contentStyles.routerRoot}>
+                            <SecretSettingsButton />                        
+                            <HeaderImage showBack={false}/>                        
+                            <div className="content-box" style={contentStyles.contentBox}>
+                                <StatusText {...props} status={msg} />
+                                <EventListBox {...props} />
+                            </div>
                         </div>
-                    </div>
-                )} />                    
+                    )}
+                } />                    
                 <Route exact path="/search" render={(props) => (
                     <div style={contentStyles.routerRoot}>
                         <HeaderImage showBack={true} />
