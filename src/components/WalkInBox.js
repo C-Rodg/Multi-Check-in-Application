@@ -44,6 +44,7 @@ class WalkInBox extends Component {
 
         this.selectCountry = this.selectCountry.bind(this);   
         this.onFormSubmit = this.onFormSubmit.bind(this); 
+        this.onInputChange = this.onInputChange.bind(this);
     }
 
     // Check if app is in invalid state

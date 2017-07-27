@@ -75,6 +75,8 @@ class RegistrantBox extends Component {
         }
 
         this.onFormSubmit = this.onFormSubmit.bind(this);
+        this.selectCountry = this.selectCountry.bind(this);
+        this.onInputChange = this.onInputChange.bind(this);
     }
 
     // Check if app is in invalid state
