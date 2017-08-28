@@ -18,3 +18,4 @@ src/mock/
 src/config/amazonDef.txt
 src/config/aws_PRINT_SETTINGS.xml
 src/static/Web.config
+src/config/backups/
