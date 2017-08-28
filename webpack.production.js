@@ -88,7 +88,7 @@ module.exports = {
 	plugins: [
 		new webpack.DefinePlugin({
 			"process.env": { NODE_ENV: JSON.stringify("production") },
-			isNYC: JSON.stringify(false)
+			isNYC: JSON.stringify(true)
 		}),
 		new ExtractTextPlugin({
 			filename: "[name].css?[hash]-[chunkhash]-[contenthash]-[name]",

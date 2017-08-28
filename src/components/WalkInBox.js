@@ -375,6 +375,7 @@ class WalkInBox extends Component {
 													value={form.qrCompanySize}
 													onChange={ev =>
 														this.onInputChange(ev, "qrCompanySize")}
+													dropdownMatchSelectWidth={false}
 												>
 													{this.generateDropdown(company_size)}
 												</Select>
@@ -395,6 +396,7 @@ class WalkInBox extends Component {
 													value={form.qrCompanyType}
 													onChange={ev =>
 														this.onInputChange(ev, "qrCompanyType")}
+													dropdownMatchSelectWidth={false}
 												>
 													{this.generateDropdown(company_type)}
 												</Select>
@@ -435,6 +437,7 @@ class WalkInBox extends Component {
 															value={form.qrPartnerQuestion}
 															onChange={ev =>
 																this.onInputChange(ev, "qrPartnerQuestion")}
+															dropdownMatchSelectWidth={false}
 														>
 															<Option value="Yes">Yes</Option>
 															<Option value="No">No</Option>
@@ -475,6 +478,7 @@ class WalkInBox extends Component {
 													size="large"
 													value={form.qrJobRole}
 													onChange={ev => this.onInputChange(ev, "qrJobRole")}
+													dropdownMatchSelectWidth={false}
 												>
 													{this.generateDropdown(job_role)}
 												</Select>
@@ -494,6 +498,7 @@ class WalkInBox extends Component {
 													size="large"
 													value={form.qrIndustry}
 													onChange={ev => this.onInputChange(ev, "qrIndustry")}
+													dropdownMatchSelectWidth={false}
 												>
 													{this.generateDropdown(industry)}
 												</Select>
@@ -513,6 +518,7 @@ class WalkInBox extends Component {
 													size="large"
 													onChange={this.selectCountry}
 													value={form.qrCountry}
+													dropdownMatchSelectWidth={false}
 												>
 													{this.generateDropdown(countryList)}
 												</Select>
@@ -533,6 +539,7 @@ class WalkInBox extends Component {
 															size="large"
 															value={form.qrState}
 															onChange={ev => this.onInputChange(ev, "qrState")}
+															dropdownMatchSelectWidth={false}
 														>
 															{this.generateStateDropdown()}
 														</Select>
@@ -581,6 +588,7 @@ class WalkInBox extends Component {
 													size="large"
 													value={form.qrLevel}
 													onChange={ev => this.onInputChange(ev, "qrLevel")}
+													dropdownMatchSelectWidth={false}
 												>
 													{this.generateDropdown(levels)}
 												</Select>
